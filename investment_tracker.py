@@ -100,7 +100,7 @@ if st.button('Calculate'):
         'Amount Invested': '${:,.2f}'
     }))
     # Accounts Summary Sentence
-    st.info(f'In {years} years, your total balance will be ${Roth_balance + B_balance + balance_401k:,.2f} with a total gain of ${total_gain[-1]:,.2f} on an investment of ${running_investment:,.2f}')
+    st.write(f'In {years} years, your total balance will be \${Roth_balance + B_balance + balance_401k:,.2f} with a total gain of \${total_gain[-1]:,.2f} on an investment of \${running_investment:,.2f}')
     # Using the saved data from earlier a graph is created to show account growth, however specific accounts will only be shown if there is an initial or contributed amount.
     fig, ax = plt.subplots()
     ax.yaxis.set_major_formatter(mtick.StrMethodFormatter('${x:,.0f}'))
