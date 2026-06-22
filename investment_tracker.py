@@ -1,4 +1,4 @@
-#Welcome too my first ever coding project! This is a basic investment projector
+# Welcome too my first ever coding project! This is a basic investment projector
 import streamlit as st
 import os
 import matplotlib.pyplot as plt
@@ -37,7 +37,8 @@ with st.sidebar:
         phases.append({'duration': duration, 'roth': roth, 'brokerage': brokerage, 'retirement': retirement, 'match': match})
     rr_annual = st.slider('Enter the annual return rate (%): ', min_value=0.0, max_value=15.0, step=0.1, key='rr_annual') / 100
     total_goal = st.number_input('Enter your total goal amount: ', min_value=0.0, step=1000.0, key='total_goal')
-# 
+# After inputing contributions, time, and phases, the user hits the big button to see their future.
+# This loop calculates account balances through running totals which are saved and updated each simulated year.
 if st.button('Calculate'):
     year_contributions = []
     for phase in phases:
@@ -57,6 +58,7 @@ if st.button('Calculate'):
     Total_Invested_List = []
     running_investment = initial_investment
     k401_Total = []
+    # The 'for year' loop calculates the exact values of every account each month and updates each account list yearly.
     for year in range(1, years + 1):
         current = year_contributions[year - 1]
         mr_contributions = current['roth']
@@ -81,6 +83,7 @@ if st.button('Calculate'):
         Roth_Year_Total.append(Roth_balance)
         Brokerage_Year_Total.append(B_balance)
         Total_Year_Total.append(Roth_balance + B_balance + balance_401k)
+    # Pandas saves the values of accounts year to year which is used for a number of different purposes later in the program including a save file, value table, and graph.
     df = pd.DataFrame({
         'Year': range(1, years + 1),
         'Roth IRA Balance': Roth_Year_Total,
@@ -96,7 +99,9 @@ if st.button('Calculate'):
         'Total': '${:,.2f}',
         'Amount Invested': '${:,.2f}'
     }))
+    # Accounts Summary Sentence
     st.info(f'In {years} years, your total balance will be ${Roth_balance + B_balance + balance_401k:,.2f} with a total gain of ${total_gain[-1]:,.2f} on an investment of ${running_investment:,.2f}')
+    # Using the saved data from earlier a graph is created to show account growth, however specific accounts will only be shown if there is an initial or contributed amount.
     fig, ax = plt.subplots()
     ax.yaxis.set_major_formatter(mtick.StrMethodFormatter('${x:,.0f}'))
     if Roth_balance > 0 or mr_contributions > 0: 
@@ -112,6 +117,7 @@ if st.button('Calculate'):
         plt.plot(years, k401_Total[-1],marker = 'o', linestyle='none')
         plt.annotate(f'${k401_Total[-1]:,.2f}', (years, k401_Total[-1]), textcoords='offset points', xytext=(0,40))
     headers = ['Year', 'Roth IRA Balance', 'Brokerage Balance', '401(k) Balance', 'Total Balance', 'Total Invested']
+    # The following line creates a "zipped" file that can be exported into a tool like Excel or Sheets for further use.
     data = list(zip(range(1, years + 1), Roth_Year_Total, Brokerage_Year_Total, k401_Total, Total_Year_Total, Total_Invested_List))
     with open(os.path.join(os.path.dirname(__file__), 'investment_data.csv'), mode='w', newline='') as file:
         writer = csv.writer(file)
@@ -129,4 +135,5 @@ if st.button('Calculate'):
         plt.axhline(total_goal, color='red', linestyle='--', label='Total Goal') 
     plt.legend()
     plt.savefig(os.path.join(os.path.dirname(__file__), 'investment_growth.png')) 
+    # The final line, it combines all the previous data and information into a multi-value graph for the user which can be saved, it is a physical projection of financial goals, achievement, and ambition.
     st.pyplot(fig)
