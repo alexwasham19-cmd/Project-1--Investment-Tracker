@@ -119,10 +119,13 @@ if st.button('Calculate'):
     headers = ['Year', 'Roth IRA Balance', 'Brokerage Balance', '401(k) Balance', 'Total Balance', 'Total Invested']
     # The following line creates a "zipped" file that can be exported into a tool like Excel or Sheets for further use.
     data = list(zip(range(1, years + 1), Roth_Year_Total, Brokerage_Year_Total, k401_Total, Total_Year_Total, Total_Invested_List))
-    with open(os.path.join(os.path.dirname(__file__), 'investment_data.csv'), mode='w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(headers)
-        writer.writerows(data)
+    csv_data = df.to_csv(index=False)
+    st.download_button(
+        label='Download CSV',
+        data=csv_data,
+        file_name='investment_data.csv",
+        mime='text/csv'
+    )
     st.success('CSV file "investment_data.csv" has been created with the investment data.')
     plt.plot(range(1, years + 1), Total_Year_Total, label='Total')
     plt.plot(years, Total_Year_Total[-1],marker = 'o', linestyle='none')
@@ -134,6 +137,5 @@ if st.button('Calculate'):
     if total_goal > 0:
         plt.axhline(total_goal, color='red', linestyle='--', label='Total Goal') 
     plt.legend()
-    plt.savefig(os.path.join(os.path.dirname(__file__), 'investment_growth.png')) 
     # The final line, it combines all the previous data and information into a multi-value graph for the user which can be saved, it is a physical projection of financial goals, achievement, and ambition.
     st.pyplot(fig)
