@@ -27,9 +27,9 @@ changes in contribution (college, first job, main earning years)
 ## How to Run
 
 **Requirements**
-...
+'''
 pip3 install matplotlib streamlit pandas
-...
+'''
 **Run Locally**
 python3 -m streamlit run investment_tracker.py
 
