@@ -4,6 +4,9 @@ This is a personal, self-directed project of mine that projects the growth of a 
 Built in Python and Streamlit, this investment tracker projects the growth of multiple accounts
 dynamically through phase-based contribution and user input
 
+## Live Demo
+[Click here to view the live app](https://project-1--investment-tracker62226.streamlit.app)
+
 ## About
 
 This project was built from scratch by me as my first project with Python from June 11th-21st of 2026
