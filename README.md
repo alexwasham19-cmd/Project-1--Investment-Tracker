@@ -13,16 +13,16 @@ converting to a Streamlit application.
 
 ## Features
 
--Projects growth between three accounts: Roth IRA, Brokerage, and Retirement/401(k)
--Phase-based Modeling: Users can create different contributions within timeframes to simulate real-life
+- Projects growth between three accounts: Roth IRA, Brokerage, and Retirement/401(k)
+- Phase-based Modeling: Users can create different contributions within timeframes to simulate real-life
 changes in contribution (college, first job, main earning years)
--Models employee 401(k) matching 
--Warns users of IRS limits for Roth and 401(k) contribution limits
--Visual breakdown of account growth through a year-to-year table and graph with endpoint markers
--Target Overlay on graph to show when and if accounts pass a goal amount
--Accounts with no balance or contributions are automatically excluded from graphing
-Data exported to CSV file for further use
-Interactive sliders and inputs via Streamlit UI
+- Models employee 401(k) matching 
+- Warns users of IRS limits for Roth and 401(k) contribution limits
+- Visual breakdown of account growth through a year-to-year table and graph with endpoint markers
+- Target Overlay on graph to show when and if accounts pass a goal amount
+- Accounts with no balance or contributions are automatically excluded from graphing
+- Data exported to CSV file for further use
+- Interactive sliders and inputs via Streamlit UI
 
 ## How to Run
 
@@ -34,14 +34,14 @@ pip3 install matplotlib streamlit pandas
 python3 -m streamlit run investment_tracker.py
 
 ## Build Log
-June 11th: Basic Growth Calculator, two-account table, inital graph| Line Count: 44
-June 12th: Dynamic endpoint annotation, grid, table formatting| Line Count: 48
-June 14th: Input validation, error messages, goal line, account exclusion outline| Line Count: 60
-June 15th: CSV export, rerun loop, goal value input| Line Count: 85
-June 17th: Phase-Based contributions and input, Roth limit warning, debugged rerun| Line Count: 119
-June 18th: 401(k) + employer match, retirement account limit warnings, converted UTMA to Brokerage Account| Line Count: 158
-June 20th: Streamlit setup, renamed file, initial UI conversion| Line Count: 159
-June 21st: Full conversion to Streamlit UI, stress testing, finalization, and GitHub publish| Line Count: 139
+- June 11th: Basic Growth Calculator, two-account table, inital graph| Line Count: 44
+- June 12th: Dynamic endpoint annotation, grid, table formatting| Line Count: 48
+- June 14th: Input validation, error messages, goal line, account exclusion outline| Line Count: 60
+- June 15th: CSV export, rerun loop, goal value input| Line Count: 85
+- June 17th: Phase-Based contributions and input, Roth limit warning, debugged rerun| Line Count: 119
+- June 18th: 401(k) + employer match, retirement account limit warnings, converted UTMA to Brokerage Account| Line Count: 158
+- June 20th: Streamlit setup, renamed file, initial UI conversion| Line Count: 159
+- June 21st: Full conversion to Streamlit UI, stress testing, finalization, and GitHub publish| Line Count: 139
 
 ## What I Learned:
 
