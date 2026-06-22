@@ -123,7 +123,7 @@ if st.button('Calculate'):
     st.download_button(
         label='Download CSV',
         data=csv_data,
-        file_name='investment_data.csv",
+        file_name='investment_data.csv',
         mime='text/csv'
     )
     st.success('CSV file "investment_data.csv" has been created with the investment data.')
