@@ -14,6 +14,7 @@ with st.sidebar:
     years = int(st.slider('Enter the number of years: ', min_value=1, max_value=50, step=1, key= 'years'))
     num_phases = int(st.slider('Enter the number of phases: ', min_value=1, max_value=5, step=1, key= 'num_phases'))
 balance_401k = 0
+balance_hsa = 0
 phases = []
 # The following section divdes the user's timeframe into phases, which reflect changing circumstances of life, dynamic contribution was a key feature I wanted to add.
 with st.sidebar:
@@ -34,22 +35,28 @@ with st.sidebar:
         match = st.number_input(' Monthly 401(k) Match: ', min_value=0.0, step=100.0, key=f'match_{i}')
         if match + retirement > 72000:
             st.warning('Warning: Your total monthly retirement contribution and match exceeds the annual limit of $72,000.')
-        phases.append({'duration': duration, 'roth': roth, 'brokerage': brokerage, 'retirement': retirement, 'match': match})
+         hsa = st.number_input(' Monthly Health Savings Contributions: ', min_value=0.0, step=10.0, key=f'health_savings_{i}')
+        hsae = st.number_input( 'Monthly Health Savings Employer Match: ', min_value=0.0, step=10.0, key=f'health_savings_employer_{i}')
+        if (hsa + hsae) * 12 > 4400:
+            st.warning('Warning: Your total monthly HSA contribution (combined self and employer contributions), exceeds the annual limit.')
+        phases.append({'duration': duration, 'roth': roth, 'brokerage': brokerage, 'retirement': retirement, 'match': match, 'hsa': hsa, 'hsae': hsae})
     rr_annual = st.slider('Enter the annual return rate (%): ', min_value=0.0, max_value=15.0, step=0.1, key='rr_annual') / 100
     total_goal = st.number_input('Enter your total goal amount: ', min_value=0.0, step=1000.0, key='total_goal')
 # After inputing contributions, time, and phases, the user hits the big button to see their future.
 # This loop calculates account balances through running totals which are saved and updated each simulated year.
+st.write('Please use the sidebar to change investment inputs.')
+st.write('Phases are different "sections" of your overall timeframe and should sum to whatever you input in the years box.')
 if st.button('Calculate'):
     year_contributions = []
     for phase in phases:
         for year in range(phase['duration']):
-            year_contributions.append({'roth': phase['roth'], 'brokerage': phase['brokerage'], 'retirement': phase['retirement'], 'match': phase['match']})
+            year_contributions.append({'roth': phase['roth'], 'brokerage': phase['brokerage'], 'retirement': phase['retirement'], 'match': phase['match'], 'hsa': phase['hsa'], 'hsae': phase['hsae']})
     if len(year_contributions) != years:
         st.error(f'Error: Phase durations sum to {len(year_contributions)} years, but you entered {years} years. ')
         st.stop()
     st.write('Hello ' + x + ', welcome to your investment tracker')
-    st.write('This tracker shows the ' + str(years) + ' year growth of your Roth IRA and Brokerage accounts')
-    st.write('Use the variable tools to change the length of investments, monthly contribution, and annual return')
+    st.write('This tracker shows the ' + str(years) + ' year growth of your various investment accounts')
+    st.write('Use the input tools to change the length of investments, monthly contribution, and annual return')
     Roth_Year_Total = []
     Brokerage_Year_Total = []
     Total_Year_Total = []
@@ -58,13 +65,15 @@ if st.button('Calculate'):
     Total_Invested_List = []
     running_investment = initial_investment
     k401_Total = []
+    hsa_Total = []
     # The 'for year' loop calculates the exact values of every account each month and updates each account list yearly.
     for year in range(1, years + 1):
         current = year_contributions[year - 1]
         mr_contributions = current['roth']
         mu_contribution = current['brokerage']
+        hsa_contribution = current['hsa'] + current['hsae']
         retirement_contribution = current['retirement'] + current['match']
-        running_investment += (mr_contributions + mu_contribution + retirement_contribution) * 12
+        running_investment += (mr_contributions + mu_contribution + retirement_contribution + hsa_contribution) * 12
         Total_Invested = f'${running_investment:,.2f}'
         Total_Invested_List.append(running_investment)
         for month in range(12):
@@ -76,19 +85,24 @@ if st.button('Calculate'):
             brokerage_str = f'${B_balance:,.2f}'
             balance_401k += retirement_contribution
             balance_401k *= (1 + rr_annual / 12)
+            balance_hsa += hsa_contribution
+            balance_hsa *= (1 + rr_annual / 12)
             k401_str = f'${balance_401k:,.2f}'
-            total_str = f'${Roth_balance + B_balance + balance_401k:,.2f}'
+            hsa_str = f'${balance_hsa:,.2f}'
+            total_str = f'${Roth_balance + B_balance + balance_401k + balance_hsa :,.2f}'
         k401_Total.append(balance_401k)
-        total_gain.append((Roth_balance + B_balance + balance_401k) - initial_investment)
+        hsa_Total.append(balance_hsa)
+        total_gain.append((Roth_balance + B_balance + balance_401k + balance_hsa) - initial_investment)
         Roth_Year_Total.append(Roth_balance)
         Brokerage_Year_Total.append(B_balance)
-        Total_Year_Total.append(Roth_balance + B_balance + balance_401k)
+        Total_Year_Total.append(Roth_balance + B_balance + balance_401k + balance_hsa)
     # Pandas saves the values of accounts year to year which is used for a number of different purposes later in the program including a save file, value table, and graph.
     df = pd.DataFrame({
         'Year': range(1, years + 1),
         'Roth IRA Balance': Roth_Year_Total,
         'Brokerage Balance': Brokerage_Year_Total,
         '401(k) Balance': k401_Total,
+        'HSA Balance': hsa_Total
         'Total' : Total_Year_Total,
         'Amount Invested': Total_Invested_List
     })
@@ -96,11 +110,12 @@ if st.button('Calculate'):
         'Roth IRA Balance': '${:,.2f}',
         'Brokerage Balance': '${:,.2f}',
         '401(k) Balance': '${:,.2f}',
+        'HSA Balance': '${:,.2f}'.
         'Total': '${:,.2f}',
         'Amount Invested': '${:,.2f}'
     }))
     # Accounts Summary Sentence
-    st.write(f'In {years} years, your total balance will be \${Roth_balance + B_balance + balance_401k:,.2f} with a total gain of \${total_gain[-1]:,.2f} on an investment of \${running_investment:,.2f}')
+    st.info(f'In {years} years, your total balance will be ${Roth_balance + B_balance + balance_401k + balance_hsa:,.2f} with a total gain of ${total_gain[-1]:,.2f} on an investment of ${running_investment:,.2f}')
     # Using the saved data from earlier a graph is created to show account growth, however specific accounts will only be shown if there is an initial or contributed amount.
     fig, ax = plt.subplots()
     ax.yaxis.set_major_formatter(mtick.StrMethodFormatter('${x:,.0f}'))
@@ -116,9 +131,13 @@ if st.button('Calculate'):
         plt.plot(range(1, years + 1), k401_Total, label='401(k)')
         plt.plot(years, k401_Total[-1],marker = 'o', linestyle='none')
         plt.annotate(f'${k401_Total[-1]:,.2f}', (years, k401_Total[-1]), textcoords='offset points', xytext=(0,40))
-    headers = ['Year', 'Roth IRA Balance', 'Brokerage Balance', '401(k) Balance', 'Total Balance', 'Total Invested']
+    if balance_hsa > 0 or hsa_contribution > 0:
+        plt.plot(range(1, years + 1), hsa_Total, label='HSA')
+        plt.plot(years, hsa_Total[-1],marker = 'o', linestyle='none')
+        plt.annotate(f'${hsa_Total[-1]:,.2f}', (years, hsa_Total[-1]), textcoords='offset points', xytext=(0,40))
+    headers = ['Year', 'Roth IRA Balance', 'Brokerage Balance', '401(k) Balance', 'HSA Balance', 'Total Balance', 'Total Invested']
     # The following line creates a "zipped" file that can be exported into a tool like Excel or Sheets for further use.
-    data = list(zip(range(1, years + 1), Roth_Year_Total, Brokerage_Year_Total, k401_Total, Total_Year_Total, Total_Invested_List))
+    data = list(zip(range(1, years + 1), Roth_Year_Total, Brokerage_Year_Total, k401_Total, hsa_Total, Total_Year_Total, Total_Invested_List))
     csv_data = df.to_csv(index=False)
     st.download_button(
         label='Download CSV',
