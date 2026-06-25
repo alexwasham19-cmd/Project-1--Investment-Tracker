@@ -110,7 +110,7 @@ if st.button('Calculate'):
         'Roth IRA Balance': '${:,.2f}',
         'Brokerage Balance': '${:,.2f}',
         '401(k) Balance': '${:,.2f}',
-        'HSA Balance': '${:,.2f}'.
+        'HSA Balance': '${:,.2f}',
         'Total': '${:,.2f}',
         'Amount Invested': '${:,.2f}'
     }))
