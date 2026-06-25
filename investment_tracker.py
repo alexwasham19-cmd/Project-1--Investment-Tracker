@@ -103,7 +103,7 @@ if st.button('Calculate'):
         'Brokerage Balance': Brokerage_Year_Total,
         '401(k) Balance': k401_Total,
         'HSA Balance': hsa_Total
-        'Total' : Total_Year_Total,
+        'Total': Total_Year_Total,
         'Amount Invested': Total_Invested_List
     })
     st.dataframe(df.style.format({
