@@ -55,9 +55,14 @@ python3 -m streamlit run investment_tracker.py
 - Streamlit UI production
 - Git and GitHub version control
 
+## Updates (06/24/26):
+
+- Fixed formatting
+- Added HSA and Employer Match
+- Added clarification for phases and overall streamline
+
 ## Next Up
 
-- Public deployment through Streamlit Cloud
 - Additional account types
 - Enhanced UI
 
