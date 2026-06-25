@@ -45,7 +45,7 @@ with st.sidebar:
 # After inputing contributions, time, and phases, the user hits the big button to see their future.
 # This loop calculates account balances through running totals which are saved and updated each simulated year.
 st.write('Please use the sidebar to change investment inputs.')
-st.write('Phases are different "sections" of your overall timeframe and should sum to whatever you input in the years box.')
+st.write('Phases are different "sections" of your overall time frame and should sum to whatever you input in the years box.')
 if st.button('Calculate'):
     year_contributions = []
     for phase in phases:
