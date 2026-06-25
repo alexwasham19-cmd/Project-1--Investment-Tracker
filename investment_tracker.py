@@ -35,7 +35,7 @@ with st.sidebar:
         match = st.number_input(' Monthly 401(k) Match: ', min_value=0.0, step=100.0, key=f'match_{i}')
         if match + retirement > 72000:
             st.warning('Warning: Your total monthly retirement contribution and match exceeds the annual limit of $72,000.')
-         hsa = st.number_input(' Monthly Health Savings Contributions: ', min_value=0.0, step=10.0, key=f'health_savings_{i}')
+        hsa = st.number_input(' Monthly Health Savings Contributions: ', min_value=0.0, step=10.0, key=f'health_savings_{i}')
         hsae = st.number_input( 'Monthly Health Savings Employer Match: ', min_value=0.0, step=10.0, key=f'health_savings_employer_{i}')
         if (hsa + hsae) * 12 > 4400:
             st.warning('Warning: Your total monthly HSA contribution (combined self and employer contributions), exceeds the annual limit.')
